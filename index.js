@@ -44,25 +44,37 @@ client.on('message', message => {
             if (botUsersDB.users[user.id]) {
                 var memberStats = botUsersDB.users[user.id];
                 console.log(memberStats);
-                var string = `@${user.tag} a passé `;
-                for (const [key, value] of Object.entries(memberStats)) {
-                    var seconds = (value[1] / 1000).toFixed(1);
-                    var minutes = (value[1] / (1000 * 60)).toFixed(1);
-                    var hours = (value[1] / (1000 * 60 * 60)).toFixed(1);
-                    var days = (value[1] / (1000 * 60 * 60 * 24)).toFixed(1);
-                    if (days > 0) string += `${days} jours,`
-                    if (hours > 0) string += `${hours} h`
-                    if (minutes > 0) string += `${minutes}mn et `
-                    if (seconds > 0) string += `${seconds} secondes`
-                    if (value[0]){
-                        var channel = client.channels.cache.get(key);
-                        string += ` dans ${channel.name}`}
-                    else
-                        string += ` en temps que ${key}`
-                }
+                var terminator = ',';
+                if (user.nickname !== undefined)
+                    var string = `${user.nickname} a passé `;
+                else
+                    var string = `${user.tag} a passé `;
+                    for (const [key, value] of Object.entries(memberStats)) {
+                        if (Object.keys(memberStats).indexOf(key) === Object.keys(memberStats).length - 1) {
+                            terminator = '.';
+                            string += " et ";
+                        }
+                        var days = Math.floor((value[1] / (1000 * 60 * 60 * 24)).toFixed(1));
+                        if (days > 0) string += `${days} jours, `; value[1] -= Math.floor(days) * 24 * 60 * 60 * 1000
+                        var hours = Math.floor((value[1] / (1000 * 60 * 60)).toFixed(1));
+                        if (hours > 0) string += `${hours} h`; value[1] -= Math.floor(hours) * 60 * 60 * 1000
+                        var minutes = Math.floor((value[1] / (1000 * 60)).toFixed(1));
+                        if (minutes > 0) string += `${minutes}mn et `; value[1] -= Math.floor(minutes) * 60 * 1000
+                        var seconds = (value[1] / 1000).toFixed(1);
+                        if (seconds > 0) string += `${seconds} secondes`
+                        if (value[0]) {
+                            var channel = client.channels.cache.get(key);
+                            string += ` dans ${channel.name}${terminator}`
+                        }
+                        else
+                            string += ` en temps que ${key}${terminator}`
+                    }
                 message.channel.send(string);
             } else
-                message.channel.send(`Aucune donnée sur ${user.tag}`);
+                if (user.nickname !== undefined)
+                    message.channel.send(`Aucune donnée sur ${user.nickname}`);
+                else
+                    message.channel.send(`Aucune donnée sur ${user.tag}`);
         }
         else if (content.indexOf("stop") === 0) {
             message.channel.send("Au revoir. \*Début de La Marseillaise*");
