@@ -18,7 +18,7 @@ try {
 } catch (error) {
     if (error.message.indexOf("ENOENT") === 0) {
         fs.writeFileSync('data.json', '{"users":{}}')
-        var botUsersDB = JSON.parse('{users":{}}');
+        var botUsersDB = JSON.parse('{"users":{}}');
     }
     else client.destroy();
 }
