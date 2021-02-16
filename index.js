@@ -49,7 +49,8 @@ client.on('message', message => {
                 for (const [key, value] of Object.entries(memberStats)) {
                     if (Object.keys(memberStats).indexOf(key) === Object.keys(memberStats).length - 1) {
                         terminator = '.';
-                        string += " et ";
+                        if (Object.keys(memberStats).length)
+                            string += " et ";
                     }
                     var days = Math.floor((value[1] / (1000 * 60 * 60 * 24)).toFixed(1));
                     if (days > 0) string += `${days} jours, `; value[1] -= Math.floor(days) * 24 * 60 * 60 * 1000
