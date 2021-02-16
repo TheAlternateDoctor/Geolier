@@ -45,8 +45,8 @@ client.on('message', message => {
                 var memberStats = botUsersDB.users[user.id];
                 console.log(memberStats);
                 var terminator = ',';
-                if (user.nickname !== undefined)
-                    var string = `${user.nickname} a passé `;
+                if (member.nickname !== undefined)
+                    var string = `${member.nickname} a passé `;
                 else
                     var string = `${user.tag} a passé `;
                     for (const [key, value] of Object.entries(memberStats)) {
@@ -71,8 +71,8 @@ client.on('message', message => {
                     }
                 message.channel.send(string);
             } else
-                if (user.nickname !== undefined)
-                    message.channel.send(`Aucune donnée sur ${user.nickname}`);
+                if (member.nickname !== undefined)
+                    message.channel.send(`Aucune donnée sur ${member.nickname}`);
                 else
                     message.channel.send(`Aucune donnée sur ${user.tag}`);
         }
